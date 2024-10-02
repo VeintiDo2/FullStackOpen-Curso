@@ -1,6 +1,6 @@
 import NumberService from "../services/numbers"
 
-const AddPerson = ({ persons, newName, newNumber, setNewName, setNewNumber, setPersons }) => {
+const AddPerson = ({ persons, newName, newNumber, setNewName, setNewNumber, setPersons, setsuccessMessage }) => {
 
   const update = (id) => {
     const user = persons.find(n => n.id === id)
@@ -9,6 +9,20 @@ const AddPerson = ({ persons, newName, newNumber, setNewName, setNewNumber, setP
       .update(id, changedInfo)
       .then(value => {
         setPersons(persons.map(user => user.id !== id ? user : value));
+
+        setsuccessMessage(`${newName} changed`)
+        setTimeout(() => {
+          setsuccessMessage(null)
+        }, 5000);
+
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch(error => {
+        setsuccessMessage(`Information of ${newName} has already been removed from server`)
+        setTimeout(() => {
+          setsuccessMessage(null)
+        }, 5000);
       })
   }
 
@@ -28,6 +42,12 @@ const AddPerson = ({ persons, newName, newNumber, setNewName, setNewNumber, setP
         .create(userObject)
         .then(returnedNote => {
           setPersons(persons.concat(returnedNote))
+
+          setsuccessMessage(`Added ${newName}`)
+          setTimeout(() => {
+            setsuccessMessage(null)
+          }, 5000);
+
           setNewNumber('')
           setNewName('')
         })
