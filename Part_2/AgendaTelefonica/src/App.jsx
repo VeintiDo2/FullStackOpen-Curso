@@ -23,7 +23,7 @@ const App = () => {
       </div>
     )
   }
-
+  
   useEffect(() => {
     NumberService
       .getAll()
