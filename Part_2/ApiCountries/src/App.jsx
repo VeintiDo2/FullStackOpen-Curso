@@ -3,18 +3,20 @@ import CountriesService from "./Services/Service";
 import CountryInfo from './Components/CountryInfo';
 import './App.css';
 import ContriesList from './Components/CountriesList';
+import Filter from './Components/Filter';
+import Weather from "./Components/Weather";
 
 function App() {
   const [inputCountry, setInputCountry] = useState("");
   const [allCountries, setAllCountries] = useState({});
   const [country, setCountry] = useState({});
+  const [weather, setWeather] = useState({});
 
   useEffect(() => {
     CountriesService
       .getAll()
       .then(values => {
         setAllCountries(values)
-        //  console.log(values)
       })
   }, [])
 
@@ -22,29 +24,15 @@ function App() {
     setInputCountry(event.target.value);
   }
 
-  const searchCountry = () => {
-    CountriesService
-      .getCountry(inputCountry)
-      .then(value => {
-        setCountry(value);
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
-  }
-
   return (
     <>
-      <div>
-        Country to search:
-        <input value={inputCountry} onChange={handleFilterChange} />
-        <button onClick={searchCountry}>Buscar</button>
-      </div>
+      <Filter allCountries={allCountries} inputCountry={inputCountry} handleFilterChange={handleFilterChange}></Filter>
 
-      <ContriesList allCountries={allCountries} inputCountry={inputCountry}></ContriesList>
+      <ContriesList allCountries={allCountries} inputCountry={inputCountry} setCountry={setCountry} setWeather={setWeather}></ContriesList>
 
       <CountryInfo country={country}></CountryInfo>
 
+      <Weather weather={weather} ></Weather>
     </>
   );
 }
